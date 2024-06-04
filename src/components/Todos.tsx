@@ -93,6 +93,11 @@ function Todos() {
       </div>
       <div className="mt-2">
         <ul className="flex flex-col gap-2">
+          {filteredTasks.length === 0 && (
+            <p className="text-center text-2xl mt-16 text-gray-400">
+              📃 No Data
+            </p>
+          )}
           {filteredTasks.map((task) => (
             <li
               className="border rounded-xl w-full bg-white px-4 py-2"
