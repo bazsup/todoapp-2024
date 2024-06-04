@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function Navbar() {
   return (
     <nav>
-      <div className="max-w-screen-lg text-right mx-auto flex justify-between py-4">
+      <div className="max-w-screen-lg text-right mx-auto flex justify-between py-4 px-4">
         <Link to="/" className="items-center text-2xl">
           📝 Todo
         </Link>

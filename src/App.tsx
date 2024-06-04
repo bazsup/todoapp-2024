@@ -49,7 +49,7 @@ function Layout() {
   return (
     <>
       <Navbar />
-      <main className="max-w-screen-lg mx-auto pt-10">
+      <main className="max-w-screen-lg mx-auto pt-10 px-4">
         <Outlet />
       </main>
     </>
