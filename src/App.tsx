@@ -10,14 +10,19 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import Todos from "./components/Todos";
 import About from "./components/About";
+import { useState } from "react";
+import NotFound from "./components/NotFound";
+import { Auth } from "./types/Auth";
 
 const router = createBrowserRouter([
   {
     id: "root",
     path: "/",
-    loader() {
+    loader({ request }) {
+      const url = new URL(request.url);
+      const searchTerm = url.searchParams.get("q");
       // Our root route always provides the user, if logged in
-      return { user: fakeAuthProvider.username };
+      return { user: fakeAuthProvider.username, searchTerm };
     },
     Component: Layout,
     children: [
@@ -26,12 +31,8 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "protected",
-        loader: protectedLoader,
-        Component: ProtectedPage,
-      },
-      {
         path: "todos",
+        loader: protectedLoader,
         Component: Todos,
       },
       {
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
         Component: About,
       },
     ],
+    ErrorBoundary: NotFound,
   },
   {
     path: "/logout",
@@ -51,9 +53,13 @@ const router = createBrowserRouter([
 ]);
 
 function Layout() {
+  const [auth, setAuth] = useState<Auth>({
+    username: null,
+    isAuthenticated: false,
+  });
   return (
     <>
-      <Navbar />
+      <Navbar auth={auth} setAuth={setAuth} />
       <main className="max-w-screen-lg mx-auto pt-10 px-4">
         <Outlet />
       </main>
@@ -72,10 +78,6 @@ function protectedLoader({ request }: LoaderFunctionArgs) {
     return redirect("/?" + params.toString());
   }
   return null;
-}
-
-function ProtectedPage() {
-  return <h3>Protected</h3>;
 }
 
 function App() {
