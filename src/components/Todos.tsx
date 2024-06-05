@@ -38,7 +38,6 @@ function Todos() {
       completed: false,
     };
     api.post("/todos", taskToCreate).then((resp) => {
-      console.log(resp.data);
       setTasks((tasks) => [...tasks, resp.data]);
     });
     setNewTask("");
