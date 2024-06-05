@@ -42,16 +42,17 @@ function Navbar({
           ) : (
             <button
               className="rounded-full bg-blue-500 text-white px-4 py-2"
-              onClick={() =>
-                fakeAuthProvider.signin("Bas").then(() => {
+              onClick={() => {
+                const username = import.meta.env.VITE_USERNAME;
+                fakeAuthProvider.signin(username).then(() => {
                   setAuth({
                     username: fakeAuthProvider.username,
                     isAuthenticated: fakeAuthProvider.isAuthenticated,
                   });
                   alert("login success");
                   navigate("/todos");
-                })
-              }
+                });
+              }}
             >
               Login
             </button>
