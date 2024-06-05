@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { api } from "../utils/api";
 
 enum TodoFilter {
   all,
@@ -25,18 +26,8 @@ const filterTasksBy = (tasks: Task[], filteredBy: TodoFilter) => {
 
 function Todos() {
   const [newTask, setNewTask] = useState("");
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Sleep",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "Eat",
-      completed: true,
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredBy, setFilterBy] = useState(TodoFilter.all);
   const filteredTasks = filterTasksBy(tasks, filteredBy);
 
@@ -64,6 +55,14 @@ function Todos() {
   const filterBy = (type: TodoFilter) => {
     setFilterBy(type);
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    api.get("/todos").then((resp) => {
+      setTasks(resp.data);
+      setIsLoading(false);
+    });
+  }, []);
 
   return (
     <div className="max-w-screen-lg mx-auto flex flex-col gap-4">
@@ -100,8 +99,13 @@ function Todos() {
         </div>
       </div>
       <div className="mt-2">
-        <ul className="flex flex-col gap-2">
-          {filteredTasks.length === 0 && (
+        <ul className="flex flex-col gap-2 pb-8">
+          {isLoading && (
+            <p className="text-center text-2xl mt-16 text-gray-400">
+              Loading...
+            </p>
+          )}
+          {!isLoading && filteredTasks.length === 0 && (
             <p className="text-center text-2xl mt-16 text-gray-400">
               📃 No Data
             </p>
