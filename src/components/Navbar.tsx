@@ -9,6 +9,7 @@ function Navbar() {
         </Link>
         <div className="flex gap-5 items-center justify-end">
           <Link to="/todos">Go to App</Link>
+          <Link to="/about">About</Link>
           <button className="rounded-full bg-blue-500 text-white px-4 py-2">
             Login
           </button>

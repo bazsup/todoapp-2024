@@ -9,6 +9,7 @@ import { fakeAuthProvider } from "./auth";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import Todos from "./components/Todos";
+import About from "./components/About";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "todos",
         Component: Todos,
+      },
+      {
+        path: "about",
+        Component: About,
       },
     ],
   },
