@@ -33,23 +33,32 @@ function Todos() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setTasks((tasks) => [
-      ...tasks,
-      {
-        id: Math.random(),
-        title: newTask,
-        completed: false,
-      },
-    ]);
+    const taskToCreate = {
+      title: newTask,
+      completed: false,
+    };
+    api.post("/todos", taskToCreate).then((resp) => {
+      console.log(resp.data);
+      setTasks((tasks) => [...tasks, resp.data]);
+    });
     setNewTask("");
   };
 
-  const toggle = (id: number) => {
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+  const toggle = (taskToUpdate: Task) => {
+    api
+      .put(`/todos/${taskToUpdate.id}`, {
+        ...taskToUpdate,
+        completed: !taskToUpdate.completed,
+      })
+      .then(() => {
+        setTasks((tasks) =>
+          tasks.map((task) =>
+            task.id === taskToUpdate.id
+              ? { ...task, completed: !task.completed }
+              : task
+          )
+        );
+      });
   };
 
   const filterBy = (type: TodoFilter) => {
@@ -88,6 +97,7 @@ function Todos() {
             { label: "✅ Done", type: TodoFilter.done },
           ].map((option) => (
             <button
+              key={option.label}
               className={`rounded-lg px-4 py-2 w-1/3 ${
                 filteredBy === option.type ? "bg-white" : ""
               }`}
@@ -120,7 +130,7 @@ function Todos() {
                 className="mr-2"
                 checked={task.completed}
                 onChange={() => {
-                  toggle(task.id);
+                  toggle(task);
                 }}
               />
               <span
