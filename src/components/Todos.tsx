@@ -1,10 +1,27 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 
 enum TodoFilter {
   all,
   todo,
   done,
 }
+
+type Task = {
+  id: number;
+  title: string;
+  completed: boolean;
+};
+
+const filterTasksBy = (tasks: Task[], filteredBy: TodoFilter) => {
+  switch (filteredBy) {
+    case TodoFilter.all:
+      return tasks;
+    case TodoFilter.todo:
+      return tasks.filter((task) => !task.completed);
+    case TodoFilter.done:
+      return tasks.filter((task) => task.completed);
+  }
+};
 
 function Todos() {
   const [newTask, setNewTask] = useState("");
@@ -21,16 +38,7 @@ function Todos() {
     },
   ]);
   const [filteredBy, setFilterBy] = useState(TodoFilter.all);
-  const filteredTasks = useMemo(() => {
-    switch (filteredBy) {
-      case TodoFilter.all:
-        return tasks;
-      case TodoFilter.todo:
-        return tasks.filter((task) => !task.completed);
-      case TodoFilter.done:
-        return tasks.filter((task) => task.completed);
-    }
-  }, [filteredBy, tasks]);
+  const filteredTasks = filterTasksBy(tasks, filteredBy);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
