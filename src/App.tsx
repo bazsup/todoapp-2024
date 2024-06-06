@@ -10,9 +10,8 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import Todos from "./components/Todos";
 import About from "./components/About";
-import { useState } from "react";
 import NotFound from "./components/NotFound";
-import { Auth } from "./types/Auth";
+import AuthProvider from "./contexts/auth";
 
 const router = createBrowserRouter([
   {
@@ -53,13 +52,9 @@ const router = createBrowserRouter([
 ]);
 
 function Layout() {
-  const [auth, setAuth] = useState<Auth>({
-    username: null,
-    isAuthenticated: false,
-  });
   return (
     <>
-      <Navbar auth={auth} setAuth={setAuth} />
+      <Navbar />
       <main className="max-w-screen-lg mx-auto pt-10 px-4">
         <Outlet />
       </main>
@@ -82,7 +77,12 @@ function protectedLoader({ request }: LoaderFunctionArgs) {
 
 function App() {
   return (
-    <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
+    <AuthProvider>
+      <RouterProvider
+        router={router}
+        fallbackElement={<p>Initial Load...</p>}
+      />
+    </AuthProvider>
   );
 }
 

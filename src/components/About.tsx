@@ -1,9 +1,13 @@
 import reactClass from "../assets/react-class.png";
 import nvmScreenshot from "../assets/nvm_result_screenshot.png";
+import { useAuth } from "../hooks/useAuth";
 
 function About() {
+  const { username } = useAuth();
   return (
     <div className="max-w-screen-lg mx-auto flex flex-col gap-4">
+      {username && <p>Recommend for {username}</p>}
+
       <h1 className="text-4xl font-bold">
         About the class{" "}
         <span className="text-blue-500 font-bold">
